@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ "a" == "a$1" ]]; then
+  echo "Please supply a role name"
+  exit 1
+fi
+
+FILENAME=./role_playbook_$RANDOM
+
+cat << EOF > $FILENAME
+- hosts: all
+  roles:
+EOF
+
+for i in $@; do
+  echo "    - $i" >> $FILENAME
+done
+
+ansible-playbook -i 'localhost,' -c local $FILENAME
+
+rm $FILENAME
